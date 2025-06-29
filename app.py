@@ -51,7 +51,7 @@ with open("static/style.css", "r") as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
 # Streamlit App UI
-st.title("📖 Qur’an AI Search (English & Arabic)")
+st.title(" Qur’an AI Search (English & Arabic)")
 
 query = st.text_input("Enter a keyword or phrase (English or Arabic)")
 search_type = st.radio("Search Type", ["Semantic (BERT)", "Keyword"])
