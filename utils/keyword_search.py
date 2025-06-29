@@ -4,4 +4,5 @@ def search_by_keyword(query, verses):
     for verse in verses:
         if query in verse['text'].lower() or query in verse['arabic'].lower():
             results.append(verse)
+
     return results
