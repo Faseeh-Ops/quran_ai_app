@@ -3,12 +3,18 @@ from sentence_transformers import SentenceTransformer, util
 class SemanticQuranSearch:
     def __init__(self, verses):
         self.verses = verses
-        self.texts = [v['text'] for v in verses]
-        self.model = SentenceTransformer('all-MiniLM-L6-v2')
-        self.embeddings = self.model.encode(self.texts, convert_to_tensor=True)
+        self.model = SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2')
+        # Use only English text for embeddings to improve English query matches
+        self.verse_texts = [verse['text'] for verse in verses]
+        self.verse_embeddings = self.model.encode(self.verse_texts, convert_to_tensor=True)
 
     def search(self, query, top_k=5):
         query_embedding = self.model.encode(query, convert_to_tensor=True)
-        scores = util.pytorch_cos_sim(query_embedding, self.embeddings)[0]
-        results = sorted(enumerate(scores), key=lambda x: x[1], reverse=True)[:top_k]
-        return [(self.verses[i], float(score)) for i, score in results]
+        scores = util.cos_sim(query_embedding, self.verse_embeddings)[0]
+        top_k = min(top_k, len(self.verses))
+        top_results = scores.topk(k=top_k)
+        results = []
+        for score, idx in zip(top_results.values, top_results.indices):
+            verse = self.verses[int(idx)]
+            results.append((verse, float(score)))
+        return results
