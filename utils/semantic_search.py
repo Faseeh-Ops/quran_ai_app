@@ -4,7 +4,7 @@ class SemanticQuranSearch:
     def __init__(self, verses):
         self.verses = verses
         self.model = SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2')
-        # Use only English text for embeddings to improve English query matches
+
         self.verse_texts = [verse['text'] for verse in verses]
         self.verse_embeddings = self.model.encode(self.verse_texts, convert_to_tensor=True)
 
