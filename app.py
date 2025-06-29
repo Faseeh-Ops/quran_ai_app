@@ -9,7 +9,7 @@ def load_and_prepare_data():
     try:
         verses = load_quran_data('quran_english.json')
         if not verses:
-            st.error("quran_english.json is empty. Please run combine_json_files.py with valid data.")
+            st.error("quran_english.json is empty. Please ensure it contains valid data.")
             st.stop()
         # Debug: Check the first verse's keys
         st.write(f"Sample verse keys: {list(verses[0].keys())}")
@@ -25,7 +25,7 @@ def load_and_prepare_data():
                 st.stop()
         return verses
     except FileNotFoundError:
-        st.error("quran_english.json not found. Please run combine_json_files.py first.")
+        st.error("quran_english.json not found. Please include it in the repository.")
         st.stop()
 
 # Cache semantic search engine

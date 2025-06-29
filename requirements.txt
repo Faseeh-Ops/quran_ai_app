@@ -1,4 +1,4 @@
-streamlit~=1.46.1
-sentence-transformers~=4.1.0
+streamlit==1.39.0
+sentence-transformers==3.2.0
 torch
 requests~=2.32.4
