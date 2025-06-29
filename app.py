@@ -3,30 +3,33 @@ from utils.keyword_search import search_by_keyword
 from utils.semantic_search import SemanticQuranSearch
 from utils.data_loader import load_quran_data
 
+# Set page config as the first Streamlit command
+st.set_page_config(page_title="Qur’an AI", layout="centered")
+
 # Cache data loading
 @st.cache_data
 def load_and_prepare_data():
     try:
         verses = load_quran_data('quran_english.json')
         if not verses:
-            st.error("quran_english.json is empty. Please ensure it contains valid data.")
-            st.stop()
-        # Debug: Check the first verse's keys
-        st.write(f"Sample verse keys: {list(verses[0].keys())}")
+            print("Error: quran_english.json is empty. Please ensure it contains valid data.")
+            return None
+        # Debug: Print the first verse's keys
+        print(f"Sample verse keys: {list(verses[0].keys())}")
         for verse in verses:
             if 'translation' in verse:
                 verse['text'] = verse.pop('translation')
             elif 'text' not in verse:
-                st.error(f"Missing 'translation' or 'text' in verse: {verse}")
-                st.stop()
+                print(f"Error: Missing 'translation' or 'text' in verse: {verse}")
+                return None
             # Verify English text is not Arabic
             if any(char in verse['text'] for char in "ءآأؤإءبتثجحخدذرزسشصضطظعغفقكلمنهوى"):
-                st.error(f"Arabic text detected in English translation for Surah {verse['surah']}:{verse['ayah']}")
-                st.stop()
+                print(f"Error: Arabic text detected in English translation for Surah {verse['surah']}:{verse['ayah']}")
+                return None
         return verses
     except FileNotFoundError:
-        st.error("quran_english.json not found. Please include it in the repository.")
-        st.stop()
+        print("Error: quran_english.json not found. Please include it in the repository.")
+        return None
 
 # Cache semantic search engine
 @st.cache_resource
@@ -35,6 +38,9 @@ def init_semantic_engine(verses):
 
 # Load data
 verses = load_and_prepare_data()
+if verses is None:
+    st.error("Failed to load Qur'an data. Please check the console for details and ensure quran_english.json is valid.")
+    st.stop()
 st.write(f"Total verses loaded: {len(verses)}")
 
 # Initialize semantic search
@@ -45,7 +51,6 @@ with open("static/style.css", "r") as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
 # Streamlit App UI
-st.set_page_config(page_title="Qur’an AI", layout="centered")
 st.title("📖 Qur’an AI Search (English & Arabic)")
 
 query = st.text_input("Enter a keyword or phrase (English or Arabic)")
