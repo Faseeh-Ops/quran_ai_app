@@ -2,7 +2,7 @@ import os
 import requests
 import json
 
-# Base URLs for AlQuran.cloud
+
 base_urls = {
     "en": "https://api.alquran.cloud/v1/surah",
     "ar": "https://api.alquran.cloud/v1/surah"
@@ -12,7 +12,7 @@ os.makedirs(output_folder, exist_ok=True)
 
 total_ayats = 0
 
-# Download English and Arabic translations
+
 for lang in ["en", "ar"]:
     lang_folder = os.path.join(output_folder, lang)
     os.makedirs(lang_folder, exist_ok=True)
@@ -27,7 +27,7 @@ for lang in ["en", "ar"]:
             response = requests.get(url, timeout=10)
             if response.status_code == 200:
                 data = response.json()
-                # Validate English text
+
                 if lang == "en":
                     verses = data.get("data", {}).get("ayahs", [])
                     for verse in verses:
