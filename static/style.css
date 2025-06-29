@@ -1,74 +1,140 @@
 :root {
   --gradient-start: #114357;
   --gradient-end: #F29492;
-  --text-color: rgba(255, 255, 255, 0.95);
-  --text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-  --content-padding: 2rem;
-  --transition-speed: 0.3s;
+  --glass-bg: rgba(255, 255, 255, 0.15);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --text-white: rgba(255, 255, 255, 0.95);
+  --accent-color: #ff7aa8;
+  --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
 }
 
 body {
-  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif, 'Amiri', 'Noto Naskh Arabic';
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
   background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
   background-attachment: fixed;
-  color: var(--text-color);
-  padding: var(--content-padding);
-  line-height: 1.6;
-  min-height: 100vh;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
+  color: var(--text-white);
   margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+.glass-container {
+  max-width: 900px;
+  margin: 3rem auto;
+  padding: 2.5rem;
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 20px;
+  border: 1px solid var(--glass-border);
+  box-shadow:
+    0 10px 35px rgba(0, 0, 0, 0.2),
+    inset 0 0 15px rgba(255, 255, 255, 0.1);
+  transform: translateY(0);
+  transition: var(--transition);
 }
 
+.glass-container:hover {
+  transform: translateY(-5px);
+  box-shadow:
+    0 15px 40px rgba(0, 0, 0, 0.3),
+    inset 0 0 20px rgba(255, 255, 255, 0.15);
+}
+
+.title {
+  font-size: 2.8rem;
+  font-weight: 800;
+  background: linear-gradient(90deg, #fff, var(--accent-color));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.subtitle {
+  font-size: 1.2rem;
+  opacity: 0.9;
+  margin-top: 0;
+}
 .arabic {
   direction: rtl;
-  font-family: 'Amiri', 'Noto Naskh Arabic', sans-serif;
-  font-size: 1.2em;
-  margin: 1rem 0;
-  line-height: 1.8;
+  font-family: 'Amiri', 'Noto Naskh Arabic', serif;
+  font-size: 1.3rem;
+  line-height: 1.9;
   text-align: justify;
-  text-justify: inter-word;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.5px;
 }
-
-/* Optional enhancements */
-.container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 2rem;
-  background-color: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(8px);
-  border-radius: 12px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-}
-
-h1, h2, h3 {
-  text-shadow: var(--text-shadow);
+.modern-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 0.8rem 2rem;
+  border-radius: 50px;
   font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  backdrop-filter: blur(5px);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 0.9rem;
+  margin-top: 1rem;
+  position: relative;
+  overflow: hidden;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
-  transition: color var(--transition-speed) ease;
+.modern-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: 0.6s;
 }
 
-a:hover {
-  color: rgba(255, 255, 255, 0.7);
+.modern-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
-/* Responsive adjustments */
+.modern-btn:hover::before {
+  left: 100%;
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.title {
+  animation: float 6s ease-in-out infinite;
+}
+
+.content-section {
+  position: relative;
+}
+
+.content-section::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+  pointer-events: none;
+}
 @media (max-width: 768px) {
-  :root {
-    --content-padding: 1rem;
+  .glass-container {
+    margin: 1rem;
+    padding: 1.5rem;
   }
 
-  body {
-    line-height: 1.5;
-  }
-
-  .arabic {
-    font-size: 1.1em;
-    line-height: 1.7;
+  .title {
+    font-size: 2rem;
   }
 }
